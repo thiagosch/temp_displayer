@@ -7,14 +7,6 @@ import datetime as dt
 # -escobar
 
 
-moreno_lat, moreno_long = (-34.6506, -58.7897)
-
-escobar_lat, escobar_long = (-34.34833, -58.79265)
-
-laPlata_lat, laPlata_long = (-34.92145, -57.95453)
-
-sanPedro_lat, sanPedro_long = (-33.67918, -59.66633)
-
 
 def get_data(lat, long, city):
 
@@ -23,12 +15,6 @@ def get_data(lat, long, city):
     json_data = json.dumps(city_data)
     with open(f'{city}.json', 'w') as f:
         f.write(json_data)
-
-city = 'laplata'
-long = laPlata_long
-lat = laPlata_lat
-get_data(lat, long,city)
-
 
 humidity_lst = {}
 
@@ -61,8 +47,7 @@ def average_func(lst):
     return sum(lst)/len(lst)
 
 # data 1 =
-structure_data(city)
-humidity_hourly_to_daily(humidity_lst)
+
 # resuelve en : (humidity_averages)
 
 
@@ -94,13 +79,37 @@ def average_daylis(city):
         test[key] = {}
         test[key]['hum'] = humidity_averages[key]
         for list in structured_data[key]:
-            test[key][list] =  average_func(structured_data[key][list])
+            if(list == 'prec'):
+                test[key][list] = sum(structured_data[key][list])
+            else:
+                test[key][list] =  average_func(structured_data[key][list])
             
 
     return test
+moreno_lat, moreno_long = (-34.6506, -58.7897)
+
+escobar_lat, escobar_long = (-34.34833, -58.79265)
+
+laPlata_lat, laPlata_long = (-34.92145, -57.95453)
+
+sanPedro_lat, sanPedro_long = (-33.67918, -59.66633)
 
 
+
+city = 'sanPedro'
+long = sanPedro_long
+lat = sanPedro_lat
+get_data(lat, long,city)
+structure_data(city)
+humidity_hourly_to_daily(humidity_lst)
 data_final = (average_daylis(city))
+
+get_data(lat, long,city)
+data_final = (average_daylis(city))
+
+
+
+
 
 with open(f'{city}_final.json', 'w') as f:
         data_final = json.dumps(data_final)
